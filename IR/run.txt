@@ -1,0 +1,10 @@
+# Instrucțiuni pentru compilare și simulare
+
+# Compilează modulele Verilog
+iverilog -o testbench_ir IR.v IR_tb.v
+
+# Rulează simularea
+vvp testbench_ir
+
+# Afișează rezultatele în GTKWave (sau alt instrument de analiză)
+gtkwave dump.vcd
