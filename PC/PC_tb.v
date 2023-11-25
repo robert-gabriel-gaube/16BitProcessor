@@ -21,9 +21,9 @@ module PC_tb;
   );
 
   initial begin 
-        clk = 0;
-        repeat(CLOCK_CYCLES * 2)
-            #(CLOCK_PERIOD / 2) clk = ~clk;
+    clk = 0;
+    repeat(CLOCK_CYCLES * 2)
+        #(CLOCK_PERIOD / 2) clk = ~clk;
   end
   
   initial begin
