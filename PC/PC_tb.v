@@ -3,15 +3,18 @@ module PC_tb;
   reg reset;
   reg branch;
   reg stall;
+  reg [9:0]adder_input;
   reg [9:0]br_address;
   wire [9:0]instr_address;
   localparam CLOCK_CYCLES = 10, CLOCK_PERIOD = 100;
-    
-  PC inst(
+
+  
+  PC inst1(
     .clk(clk),
     .reset(reset),
     .branch(branch),
     .stall(stall),
+    .adder_input(adder_input),
     .br_address(br_address),
     .instr_address(instr_address)
   );
@@ -25,6 +28,9 @@ module PC_tb;
   initial begin
     reset = 1;
     #200 reset = 0;
+    branch = 0;
+    stall = 0;
+    adder_input = 0;
   end
   
   initial begin
