@@ -1,10 +1,10 @@
 module flags(
   input [3:0]ALU_flags,
-  input ALU_ready,reset,
+  input ALU_ready,reset,clk,
   output reg [3:0]out
 );
 
-always @(*)
+always @(posedge clk, posedge reset)
 begin
   if(reset)
     out<=0'b0000;
