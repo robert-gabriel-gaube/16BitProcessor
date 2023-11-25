@@ -1,11 +1,8 @@
 module PC_adder(
   input [9:0]in,
-  output reg [9:0]out
+  output [9:0]out
 );
-  always(*)
-  begin
-    out = in + 1;
-  end
+    assign out = in + 1;
 endmodule
 
 
@@ -16,21 +13,13 @@ module PC(
   output reg [9:0]instr_address
 );
 
-PC_adder adder_inst(
-    .in(instr_address),
-    .out(adder_input)
-  );
-
-always @(posedge clk, posedge reset)
-begin
-  if(reset)
-    instr_address<=0;
-  else 
-    begin
-    if(branch)
-      instr_address<=br_address;
-    else if(!stall)
-    instr_address<=adder_input;
+  always @(posedge clk, posedge reset)
+  begin
+    if(reset) instr_address<=0;
+    else begin
+      if(branch)      instr_address<=br_address;
+      else if(!stall) instr_address<=adder_input;
     end  
-end
+  end
+
 endmodule
