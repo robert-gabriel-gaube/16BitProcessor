@@ -7,15 +7,11 @@ module SP(
     output reg [15:0] out
 );
 
-    always @(posedge clk) begin
+    always @(posedge reset, negedge clk) begin
         if (reset) begin
             out <= 16'hFFFF;
-        end else begin
-            if (pop == 1) begin
+        end else if (pop == 1 || push == 1) begin
                 out <= new_val;
-            end else if (push == 1) begin
-                out <= new_val;
-            end
         end
     end
 
