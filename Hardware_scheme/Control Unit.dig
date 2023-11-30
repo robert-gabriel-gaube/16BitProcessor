@@ -87,6 +87,16 @@
       <elementAttributes>
         <entry>
           <string>Label</string>
+          <string>move</string>
+        </entry>
+      </elementAttributes>
+      <pos x="360" y="-20"/>
+    </visualElement>
+    <visualElement>
+      <elementName>Out</elementName>
+      <elementAttributes>
+        <entry>
+          <string>Label</string>
           <string>store</string>
         </entry>
       </elementAttributes>
@@ -203,16 +213,6 @@
       <pos x="360" y="580"/>
     </visualElement>
     <visualElement>
-      <elementName>Out</elementName>
-      <elementAttributes>
-        <entry>
-          <string>Label</string>
-          <string>reset_cu</string>
-        </entry>
-      </elementAttributes>
-      <pos x="360" y="760"/>
-    </visualElement>
-    <visualElement>
       <elementName>Clock</elementName>
       <elementAttributes>
         <entry>
@@ -221,6 +221,16 @@
         </entry>
       </elementAttributes>
       <pos x="260" y="400"/>
+    </visualElement>
+    <visualElement>
+      <elementName>Out</elementName>
+      <elementAttributes>
+        <entry>
+          <string>Label</string>
+          <string>reset_cu</string>
+        </entry>
+      </elementAttributes>
+      <pos x="360" y="760"/>
     </visualElement>
   </visualElements>
   <wires/>
