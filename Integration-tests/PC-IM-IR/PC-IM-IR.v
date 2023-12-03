@@ -55,7 +55,7 @@ module PCxIMxIR;
         reset = 1;
         en_write = 1;
         #25 reset = 0;
-        #3275 reset = 1;
+        #3325 reset = 1;
         en_write = 0;
         #25 reset = 0;
     end
