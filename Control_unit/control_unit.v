@@ -1,5 +1,5 @@
 module control_unit (
-    input ALU_ready, reg_s, acc_s, start, reset, clk,
+    input reg_s, acc_s, start, reset, clk,
     input [5:0] opcode, 
     input [3:0] flags,
     output move, store, branch, pop, push,
@@ -16,12 +16,10 @@ module control_unit (
     localparam SNOTHING = 14, SSTALL = 15;
     reg [3:0] state_next;
 
-    always @(*)
+    always @(*) begin
         if(state == S0 &&
             !start)             state_next = S0;
         else if(state == S13)   state_next = S0;
-        else if(state == SSTALL &&
-                !ALU_ready)     state_next = SSTALL;
         else if(state <= SSTALL) begin 
             if(opcode == 6'h00)         state_next = S13;
             else if(opcode == 6'h01)    state_next = (reg_s) ? S1 : S2;
@@ -44,22 +42,25 @@ module control_unit (
                 end
             end
             else if(opcode >= 6'h11 &&
-                    opcode <= 6'h13)    state_next = SSTALL;
-            else if(opcode >= 6'h14 &&
                     opcode <= 6'h17)    state_next = S5;
             else if(opcode == 6'h18 ||
                     opcode == 6'h19)    state_next = SNOTHING;
             else if(opcode == 6'h1A ||
                     opcode == 6'h1B)    state_next = S5;
             else if(opcode == 6'h1C)    state_next = S10;
-            else 
+            else if(opcode == 6'hFF)    state_next = SNOTHING;
+            else
                 if(reg_s)   state_next = S11;
                 else        state_next = S12;
         end
+    end
 
-    always @(posedge clk, posedge reset) 
+    always @(posedge clk, posedge reset) begin 
+        #1
+        if(branch)  #2;
         if(reset)   state <= S0;
         else        state <= state_next;
+    end
     
     assign reset_cu = (state == S0);
     assign move = (state == S6) || (state == S8);

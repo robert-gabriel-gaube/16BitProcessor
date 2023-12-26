@@ -1,8 +1,8 @@
 # add all Verilog source files, separated by spaces
-set sourcefiles {register.v register_tb.v ../Mux/mux.v ../DFF/DFF.v} 
+set sourcefiles {../IM/IM.v ../PC/PC.v ../Control_unit/control_unit.v ../Register/register.v ../Accumulator_register/accumulator.v ../ALU/ALU.v processor.v} 
 
 # set name of the top module
-set topmodule register_tb
+set topmodule processor
 
 ###################################################
 #####DO NOT MODIFY THE SCRIPT BELLOW THIS LINE#####

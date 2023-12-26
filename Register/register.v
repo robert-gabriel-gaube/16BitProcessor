@@ -1,22 +1,17 @@
-module register (
-    input clk, en,
-    input [15:0] D,
-    output [15:0] Q
+module register(
+    input reset, clk, acc_op, load,
+    input [15:0]acc_val,
+    input [15:0]data_val,
+    output reg [15:0]out
 );
 
-    wire [15:0] mux_out;
-
-    mux inst0(
-        .sel(en),
-        .inp1(Q),
-        .inp2(D),
-        .out(mux_out)
-    );
-
-    DFF inst1(
-        .clk(clk),
-        .D(mux_out),
-        .Q(Q)
-    );
-    
+    always@(posedge reset, posedge clk)
+    begin
+        if(reset) out <= 16'h0000;
+        else begin 
+            #5
+            if(acc_op) out <= acc_val;
+            else if(load) out <= data_val;
+        end 
+    end
 endmodule

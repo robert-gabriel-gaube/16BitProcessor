@@ -15,9 +15,12 @@ module PC(
 
   always @(posedge clk, posedge reset)
   begin
-    if(reset) instr_address<=0;
+    if(reset) instr_address <= 0;
     else begin
-      if(branch)      instr_address<=br_address;
+      if(branch)      begin 
+        #1
+        instr_address<=br_address;
+      end
       else if(!stall) instr_address<=adder_input;
     end  
   end
