@@ -1,8 +1,8 @@
 # add all Verilog source files, separated by spaces
-set sourcefiles {mux.v mux_tb.v}
+set sourcefiles {DM.v DM_tb.v} 
 
 # set name of the top module
-set topmodule mux_tb
+set topmodule DM_tb
 
 ###################################################
 #####DO NOT MODIFY THE SCRIPT BELLOW THIS LINE#####
