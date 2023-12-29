@@ -9,17 +9,17 @@ endmodule
 
 module SP(
     input pop, push, reset, clk,
-    input wire [15:0] new_val,
+    input [15:0] new_sp_val,
     output reg [15:0] out
 );
     always @(posedge reset, posedge clk) begin 
         #4;
         if(reset)           out <= 16'hFFFF;
-        else if(push == 1)  out <= new_val;
+        else if(push == 1)  out <= new_sp_val;
     end
 
     always @(negedge clk) begin
-        if (pop == 1)       out <= new_val;
+        if (pop == 1)       out <= new_sp_val;
     end
 
 endmodule

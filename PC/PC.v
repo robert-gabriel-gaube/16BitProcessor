@@ -7,16 +7,16 @@ module PC_adder(
 endmodule
 
 module PC(
-    input [9:0] adder_input,
-    input [9:0] br_address,
+    input [9:0] new_pc_val,
+    input [9:0] branch_address,
     input branch, stall, clk, reset,
-    output reg [9:0] instr_address
+    output reg [9:0] pc_out
 );
 
   always @(posedge clk, posedge reset) begin 
-    if(reset)           instr_address <= 0;
-    else if(branch) #1  instr_address <= br_address;
-    else if(!stall)     instr_address <= adder_input;
+    if(reset)           pc_out <= 0;
+    else if(branch) #1  pc_out <= branch_address;
+    else if(!stall)     pc_out <= new_pc_val;
   end
 
 endmodule

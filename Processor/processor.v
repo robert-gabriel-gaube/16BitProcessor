@@ -1,136 +1,133 @@
 module processor;
     reg clk, reset, en_write;
     reg [15:0] data_in;
-    wire [9:0] instr_address, adder_input;
+    wire [9:0] pc_out, new_pc_val;
     wire [15:0] instruction;
 
     reg start;
-    wire move, store, branch, pop, push;
-    wire stall, str_rez, load_y, load_x;
-    wire acc_opx, acc_opy, done, reset_cu;
-    wire jmp, ret;
     wire [4:0] state;
 
-    wire [15:0] register_x, register_y, register_acc, alu_out, dm_out;
-    wire [15:0] val, sp_out;
+    wire [15:0] x_out, y_out, acc_out, alu_out, dm_out;
+    wire [15:0] sp_out;
     wire [3:0] alu_flags;
 
-    ALU alu(
-        .A(instruction[9] ? register_y : register_x),
-        .B({{7{instruction[8]}} ,instruction[8:0]}),
-        .opcode(instruction[15:10]),
-        .out(alu_out),
-        .store(store),
-        .Z(alu_flags[0]),
-        .N(alu_flags[1]),
-        .C(alu_flags[2]),
-        .O(alu_flags[3])
+    wire [15:0] alu_val_extend_out, alu_reg_mux_out, dm_val_extend_out, dm_mux_out;
+    wire [9:0] pc_mux_out;
+
+    wire [14:0] control_lines;
+
+    localparam MOVE = 0, STORE = 1, BRANCH = 2;
+    localparam POP = 3, PUSH = 4, STALL = 5;
+    localparam STR_REZ = 6, LOAD_Y = 7, LOAD_X = 8;
+    localparam ACC_OPX = 9, ACC_OPY = 10, JMP = 11;
+    localparam RET = 12, RESET_CU = 13, DONE = 14;
+
+    PC_adder pc_adder(
+        .in(pc_out),
+        .out(new_pc_val)
     );
 
-    accumulator acc(
-        .ALU_rez(alu_out),
-        .reset(reset),
-        .clk(clk),
-        .str_rez(str_rez),
-        .out(register_acc)
-    );
-
-    register reg_x(
-        .reset(reset),
-        .clk(clk),
-        .acc_op(acc_opx),
-        .load(load_x),
-        .acc_val(register_acc),
-        .data_val(dm_out),
-        .out(register_x)
-    );
-
-    register reg_y(
-        .reset(reset),
-        .clk(clk),
-        .acc_op(acc_opy),
-        .load(load_y),
-        .acc_val(register_acc),
-        .data_val(dm_out),
-        .out(register_y)
-    );
-
-    PC_adder inst0(
-        .in(instr_address),
-        .out(adder_input)
+    mux2to1 #(10) pc_mux (
+        .data_0(instruction[9:0]),
+        .data_1(dm_out[9:0]),
+        .sel(control_lines[RET]),
+        .data_out(pc_mux_out)
     );
     
-    PC inst1(
+    PC pc(
         .clk(clk),
         .reset(reset),
-        .branch(branch),
-        .stall(stall),
-        .br_address((ret) ? dm_out[9:0] : instruction[9:0]),
-        .adder_input(adder_input),
-        .instr_address(instr_address)
+        .branch(control_lines[BRANCH]),
+        .stall(control_lines[STALL]),
+        .branch_address(pc_mux_out),
+        .new_pc_val(new_pc_val),
+        .pc_out(pc_out)
     );
 
-    IM inst2(
+    IM im(
         .clk(clk),
         .en_write(en_write),
-        .address(instr_address),
+        .address(pc_out),
         .data_in(data_in),
         .data_out(instruction)
     );
 
-    SP stack_pointer(
-        .pop(pop),
-        .push(push),
-        .reset(reset),
-        .new_val(val),
+    reg_file register_file(
         .clk(clk),
-        .out(sp_out)
+        .reset(reset),
+        .str_rez(control_lines[STR_REZ]),
+        .load_x(control_lines[LOAD_X]),
+        .load_y(control_lines[LOAD_Y]),
+        .acc_opx(control_lines[ACC_OPX]),
+        .acc_opy(control_lines[ACC_OPY]),
+        .pop(control_lines[POP]),
+        .push(control_lines[PUSH]),
+        .alu_out(alu_out),
+        .dm_out(dm_out),
+        .acc_out(acc_out),
+        .x_out(x_out),
+        .y_out(y_out),
+        .sp_out(sp_out)
     );
 
-    INC_DEC_SP INC_DEC_SP_inst(
-        .pop(pop),
-        .sp(sp_out),
-        .val(val)
+    mux2to1 #(16) alu_reg_mux(
+        .data_0(x_out),
+        .data_1(y_out),
+        .sel(instruction[9]),
+        .data_out(alu_reg_mux_out)
+    );
+
+    sign_extend #(9, 16) alu_val_extend(
+        .data_in(instruction[8:0]),
+        .data_out(alu_val_extend_out)
+    );
+
+    ALU alu(
+        .store(control_lines[STORE]),
+        .A(alu_reg_mux_out),
+        .B(alu_val_extend_out),
+        .opcode(instruction[15:10]),
+        .flags(alu_flags),
+        .out(alu_out)
+    );
+
+    control_unit cu (
+        .clk(clk),
+        .reset(reset),
+        .start(start),
+        .opcode(instruction[15:10]),
+        .reg_s(instruction[9]),
+        .acc_s(instruction[8]),
+        .flags(alu_flags),
+        .control_lines(control_lines),
+        .state(state)
+    );
+
+    sign_extend #(10, 16) dm_val_extend(
+        .data_in(new_pc_val),
+        .data_out(dm_val_extend_out)
+    );
+
+    mux2to1 #(16) dm_mux(
+        .data_0(alu_out),
+        .data_1(dm_val_extend_out),
+        .sel(control_lines[JMP]),
+        .data_out(dm_mux_out)
     );
 
     DM data_memory(
         .clk(clk),
-        .rez((jmp) ? {{6{adder_input[9]}}, adder_input[9:0]} : alu_out),
-        .load(load_x | load_y),
-        .store(store),
-        .push(push),
-        .pop(pop),
-        .sp(sp_out),
+        .load(control_lines[LOAD_X] | control_lines[LOAD_Y]),
+        .store(control_lines[STORE]),
+        .push(control_lines[PUSH]),
+        .pop(control_lines[POP]),
         .address(instruction[8:0]),
+        .rez(dm_mux_out),
+        .sp(sp_out),
         .data_out(dm_out)
     );
 
-    control_unit cu (
-        .opcode(instruction[15:10]),
-        .reg_s(instruction[9]),
-        .acc_s(instruction[8]),
-        .start(start),
-        .reset(reset),
-        .clk(clk),
-        .flags(alu_flags),
-        .move(move),
-        .store(store),
-        .branch(branch),
-        .pop(pop),
-        .push(push),
-        .stall(stall),
-        .str_rez(str_rez),
-        .load_y(load_y),
-        .load_x(load_x),
-        .acc_opx(acc_opx),
-        .acc_opy(acc_opy),
-        .done(done),
-        .reset_cu(reset_cu),
-        .jmp(jmp),
-        .ret(ret),
-        .state(state)
-    );
-
+    
     localparam NUM_INSTRUCTIONS = 15;
     localparam CLOCK_CYCLES = NUM_INSTRUCTIONS * 2, CLOCK_PERIOD = 100;
 

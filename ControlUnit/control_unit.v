@@ -2,12 +2,14 @@ module control_unit(
     input reg_s, acc_s, start, reset, clk,
     input [5:0] opcode, 
     input [3:0] flags,
-    output move, store, branch, pop, push,
-    output stall, str_rez, load_y, load_x, 
-    output acc_opx, acc_opy, done, reset_cu,
-    output jmp, ret,
+    output [14:0] control_lines,
     output reg [4:0] state
 );
+    localparam MOVE = 0, STORE = 1, BRANCH = 2;
+    localparam POP = 3, PUSH = 4, STALL = 5;
+    localparam STR_REZ = 6, LOAD_Y = 7, LOAD_X = 8;
+    localparam ACC_OPX = 9, ACC_OPY = 10, JMP = 11;
+    localparam RET = 12, RESET_CU = 13, DONE = 14;
 
     localparam S0 = 0, S1 = 1, S2 = 2, S3 = 3;
     localparam S4 = 4, S5 = 5, S6 = 6, S7 = 7;
@@ -59,25 +61,25 @@ module control_unit(
 
     always @(posedge clk, posedge reset) begin 
         #1
-        if(branch)  #2;
+        if(control_lines[BRANCH])  #2;
         if(reset)   state <= S0;
         else        state <= state_next;
     end
-    
-    assign reset_cu = (state == S0);
-    assign move = (state == S6) || (state == S8);
-    assign store = (state == S3) || (state == S10);
-    assign branch = (state == S4) || (state == S14) || (state == S15);
-    assign pop = (state == S11) || (state == S12) || (state == S15);
-    assign push = (state == S10) || (state == S14);
-    assign stall = (state == SSTALL);
-    assign str_rez = (state == S5) || (state == S6) || (state == S8);
-    assign load_y = (state == S1) || (state == S11);
-    assign load_x = (state == S2) || (state == S12);
-    assign acc_opy = (state == S6) || (state == S7);
-    assign acc_opx = (state == S8) || (state == S9);
-    assign done = (state == S13);
-    assign jmp = (state == S14);
-    assign ret = (state == S15);
+
+    assign control_lines[MOVE] = (state == S6) || (state == S8);
+    assign control_lines[STORE] = (state == S3) || (state == S10);
+    assign control_lines[BRANCH] = (state == S4) || (state == S14) || (state == S15);
+    assign control_lines[POP] = (state == S11) || (state == S12) || (state == S15);
+    assign control_lines[PUSH] = (state == S10) || (state == S14);
+    assign control_lines[STALL] = (state == SSTALL);
+    assign control_lines[STR_REZ] = (state == S5) || (state == S6) || (state == S8);
+    assign control_lines[LOAD_Y] = (state == S1) || (state == S11);
+    assign control_lines[LOAD_X] = (state == S2) || (state == S12);
+    assign control_lines[ACC_OPY] = (state == S6) || (state == S7);
+    assign control_lines[ACC_OPX] = (state == S8) || (state == S9);
+    assign control_lines[JMP] = (state == S14);
+    assign control_lines[RET] = (state == S15);
+    assign control_lines[RESET_CU] = (state == S0);
+    assign control_lines[DONE] = (state == S13);
 
 endmodule
