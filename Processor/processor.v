@@ -8,7 +8,8 @@ module processor;
     wire move, store, branch, pop, push;
     wire stall, str_rez, load_y, load_x;
     wire acc_opx, acc_opy, done, reset_cu;
-    wire [3:0] state;
+    wire jmp, ret;
+    wire [4:0] state;
 
     wire [15:0] register_x, register_y, register_acc, alu_out, dm_out;
     wire [15:0] val, sp_out;
@@ -65,7 +66,7 @@ module processor;
         .reset(reset),
         .branch(branch),
         .stall(stall),
-        .br_address(instruction[9:0]),
+        .br_address((ret) ? dm_out[9:0] : instruction[9:0]),
         .adder_input(adder_input),
         .instr_address(instr_address)
     );
@@ -95,7 +96,7 @@ module processor;
 
     DM data_memory(
         .clk(clk),
-        .rez(alu_out),
+        .rez((jmp) ? {{6{adder_input[9]}}, adder_input[9:0]} : alu_out),
         .load(load_x | load_y),
         .store(store),
         .push(push),
@@ -127,11 +128,13 @@ module processor;
         .acc_opy(acc_opy),
         .done(done),
         .reset_cu(reset_cu),
+        .jmp(jmp),
+        .ret(ret),
         .state(state)
     );
 
-    localparam CLOCK_CYCLES = 30, CLOCK_PERIOD = 100;
-    localparam NUM_INSTRUCTIONS = 9;
+    localparam NUM_INSTRUCTIONS = 15;
+    localparam CLOCK_CYCLES = NUM_INSTRUCTIONS * 2, CLOCK_PERIOD = 100;
 
     initial begin 
         clk = 0;
@@ -160,17 +163,29 @@ module processor;
         #100
         data_in = 16'b0111000000000000;
         #100
-        data_in = 16'b0110100000000000;
+        data_in = 16'b0100000000000010;
+        #100
+        data_in = 16'b0010000000000111;
+        #100
+        data_in = 16'b0111010000000000;
+        #100
+        data_in = 16'b0000000000000000;
+        #100
+        data_in = 16'b0111011000000000;
+        #100
+        data_in = 16'b0111010000000000;
+        #100
+        data_in = 16'b0010100000000110;
         #100
         data_in = 16'b0100000100000000;
         #100
         data_in = 16'b0111000000000000;
         #100
-        data_in = 16'b0111011000000000;
+        data_in = 16'b0100000000000100;
         #100
-        data_in = 16'b0111011000000000;
+        data_in = 16'b0111001000000000;
         #100
-        data_in = 16'b0000000000000000;
+        data_in = 16'b0010010000000000;
     end
 
 endmodule

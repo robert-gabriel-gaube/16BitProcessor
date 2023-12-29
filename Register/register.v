@@ -9,9 +9,12 @@ module register(
     begin
         if(reset) out <= 16'h0000;
         else begin 
-            #5
+            #5;
             if(acc_op) out <= acc_val;
-            else if(load) out <= data_val;
+            else if(load) begin 
+                #1;
+                out <= data_val;
+            end 
         end 
     end
 endmodule
