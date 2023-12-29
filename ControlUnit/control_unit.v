@@ -1,4 +1,4 @@
-module control_unit (
+module control_unit(
     input reg_s, acc_s, start, reset, clk,
     input [5:0] opcode, 
     input [3:0] flags,

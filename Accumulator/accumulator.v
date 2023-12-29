@@ -6,9 +6,9 @@ module accumulator(
 );
 
     always @(posedge clk, posedge reset) begin
-        #4
-        if (reset) out <= 16'h0000;
-	    else if (str_rez) out <= ALU_rez;
+        #4;
+        if(reset)           out <= 16'h0000;
+	    else if(str_rez)    out <= ALU_rez;
     end
 
 endmodule

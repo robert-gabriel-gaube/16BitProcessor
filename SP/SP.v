@@ -1,9 +1,15 @@
+module INC_DEC_SP(
+    input pop,
+    input [15:0] sp,
+    output [15:0] val
+);
+    assign val = (pop == 1) ? (sp + 1) : (sp - 1);
+
+endmodule
+
 module SP(
-    input wire pop,
-    input wire push,
-    input wire reset,
+    input pop, push, reset, clk,
     input wire [15:0] new_val,
-    input wire clk,
     output reg [15:0] out
 );
     always @(posedge reset, posedge clk) begin 
@@ -13,7 +19,7 @@ module SP(
     end
 
     always @(negedge clk) begin
-        if (pop == 1) out <= new_val;
+        if (pop == 1)       out <= new_val;
     end
 
 endmodule

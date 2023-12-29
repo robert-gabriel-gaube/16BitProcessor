@@ -14,7 +14,6 @@ module processor;
     wire [15:0] register_x, register_y, register_acc, alu_out, dm_out;
     wire [15:0] val, sp_out;
     wire [3:0] alu_flags;
-    wire [8:0] address_reg;
 
     ALU alu(
         .A(instruction[9] ? register_y : register_x),
@@ -103,8 +102,7 @@ module processor;
         .pop(pop),
         .sp(sp_out),
         .address(instruction[8:0]),
-        .data_out(dm_out),
-        .address_reg(address_reg)
+        .data_out(dm_out)
     );
 
     control_unit cu (
