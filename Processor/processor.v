@@ -1,20 +1,18 @@
 module processor;
-    reg clk, reset, en_write;
+    reg clk, reset, en_write, start;
     reg [15:0] data_in;
-    wire [9:0] pc_out, new_pc_val;
+    wire [14:0] control_lines;
+    wire [9:0] pc_out;
     wire [15:0] instruction;
 
-    reg start;
-    wire [4:0] state;
-
-    wire [15:0] x_out, y_out, acc_out, alu_out, dm_out;
-    wire [15:0] sp_out;
+    wire [15:0] x_out, y_out, acc_out;
+    wire [15:0] sp_out, dm_out, alu_out;
     wire [3:0] alu_flags;
 
     wire [15:0] alu_val_extend_out, alu_reg_mux_out, dm_val_extend_out, dm_mux_out;
-    wire [9:0] pc_mux_out;
-
-    wire [14:0] control_lines;
+    wire [9:0] pc_mux_out ,new_pc_val;
+    wire [4:0] state;
+    
 
     localparam MOVE = 0, STORE = 1, BRANCH = 2;
     localparam POP = 3, PUSH = 4, STALL = 5;
