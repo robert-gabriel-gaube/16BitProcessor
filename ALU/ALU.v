@@ -1,4 +1,5 @@
-module ALU(input [15:0] A, B, 
+module ALU(input store,
+           input [15:0] A, B, 
            input [5:0] opcode,  
            output reg [15:0] out,
            output reg Z, N, C, O 
@@ -8,6 +9,8 @@ reg [16:0] temp;
 reg [31:0] temp_mul;
 
 always @(*) begin
+    if(store) out = A;
+    else 
     case (opcode)
         6'h0A: begin // ADD
             temp = A + B;

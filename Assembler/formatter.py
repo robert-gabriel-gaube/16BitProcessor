@@ -1,4 +1,4 @@
-print("data_in = 16'hFFFF")
+print("data_in = 16'hFFFF;")
 
 with open("out.txt", 'r') as f:
     for line in f.readlines():

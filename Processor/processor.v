@@ -10,14 +10,17 @@ module processor;
     wire acc_opx, acc_opy, done, reset_cu;
     wire [3:0] state;
 
-    wire [15:0] register_x, register_y, register_acc, alu_out;
+    wire [15:0] register_x, register_y, register_acc, alu_out, dm_out;
+    wire [15:0] val, sp_out;
     wire [3:0] alu_flags;
+    wire [8:0] address_reg;
 
     ALU alu(
         .A(instruction[9] ? register_y : register_x),
         .B({{7{instruction[8]}} ,instruction[8:0]}),
         .opcode(instruction[15:10]),
         .out(alu_out),
+        .store(store),
         .Z(alu_flags[0]),
         .N(alu_flags[1]),
         .C(alu_flags[2]),
@@ -38,7 +41,7 @@ module processor;
         .acc_op(acc_opx),
         .load(load_x),
         .acc_val(register_acc),
-        .data_val(alu_out),
+        .data_val(dm_out),
         .out(register_x)
     );
 
@@ -48,7 +51,7 @@ module processor;
         .acc_op(acc_opy),
         .load(load_y),
         .acc_val(register_acc),
-        .data_val(alu_out),
+        .data_val(dm_out),
         .out(register_y)
     );
 
@@ -73,6 +76,34 @@ module processor;
         .address(instr_address),
         .data_in(data_in),
         .data_out(instruction)
+    );
+
+    SP stack_pointer(
+        .pop(pop),
+        .push(push),
+        .reset(reset),
+        .new_val(val),
+        .clk(clk),
+        .out(sp_out)
+    );
+
+    INC_DEC_SP INC_DEC_SP_inst(
+        .pop(pop),
+        .sp(sp_out),
+        .val(val)
+    );
+
+    DM data_memory(
+        .clk(clk),
+        .rez(alu_out),
+        .load(load_x | load_y),
+        .store(store),
+        .push(push),
+        .pop(pop),
+        .sp(sp_out),
+        .address(instruction[8:0]),
+        .data_out(dm_out),
+        .address_reg(address_reg)
     );
 
     control_unit cu (
@@ -100,7 +131,7 @@ module processor;
     );
 
     localparam CLOCK_CYCLES = 30, CLOCK_PERIOD = 100;
-    localparam NUM_INSTRUCTIONS = 12;
+    localparam NUM_INSTRUCTIONS = 9;
 
     initial begin 
         clk = 0;
@@ -125,25 +156,19 @@ module processor;
     initial begin 
         data_in = 16'hFFFF;
         #100
-        data_in = 16'b0100001000000011;
+        data_in = 16'b0100000000000100;
         #100
-        data_in = 16'b0100000000000001;
+        data_in = 16'b0111000000000000;
         #100
         data_in = 16'b0110100000000000;
         #100
         data_in = 16'b0100000100000000;
         #100
-        data_in = 16'b0110111000000000;
+        data_in = 16'b0111000000000000;
         #100
-        data_in = 16'b0100001100000000;
+        data_in = 16'b0111011000000000;
         #100
-        data_in = 16'b0110111000000000;
-        #100
-        data_in = 16'b0000110000001010;
-        #100
-        data_in = 16'b0001110000000011;
-        #100
-        data_in = 16'b0100001000001010;
+        data_in = 16'b0111011000000000;
         #100
         data_in = 16'b0000000000000000;
     end
