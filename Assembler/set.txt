@@ -1,0 +1,14 @@
+MOV X, 4
+PSH X
+MOV X, 2
+JMP 7
+POP X  
+HLT
+POP Y
+POP X
+ADD X, 6
+MOV X, A
+PSH X 
+MOV X, 4
+PSH Y
+RET
