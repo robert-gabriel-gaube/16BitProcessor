@@ -1,14 +1,18 @@
-MOV X, 4
-PSH X
+MOV X, 1
+STA X, 1
 MOV X, 2
-JMP 7
-POP X  
-HLT
-POP Y
-POP X
-ADD X, 6
-MOV X, A
-PSH X 
+STA X, 2
+MOV X, 3
+STA X, 3
 MOV X, 4
-PSH Y
-RET
+STA X, 4
+MOV X, 5
+STA X, 5
+MOV X, 6
+STA X, 6
+MOV X, 7
+STA X, 7
+MOV X, 8
+STA X, 8
+MOV X, 9
+STA X, 9

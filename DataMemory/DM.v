@@ -1,9 +1,9 @@
 module DM(
     input [15:0] rez,
-    input load, store, push, pop, clk,
+    input store, push, pop, clk,
     input [15:0] sp,
     input [8:0] address,
-    output reg [15:0] data_out
+    output [15:0] data_out
 );
     reg [8:0] address_reg;
     reg [15:0] memory [0:65535];
@@ -14,8 +14,8 @@ module DM(
 
         if(push)        memory[sp] <= rez;
         else if(store)  memory[address_reg] <= rez;
-        else if(pop)    data_out <= memory[sp];
-        else if(load)   data_out <= memory[address_reg];
     end
+    
+    assign data_out = (pop) ? memory[sp] : memory[address_reg];
 
 endmodule
