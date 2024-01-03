@@ -1,5 +1,5 @@
 # add all Verilog source files, separated by spaces
-set sourcefiles {../IM/IM.v ../PC/PC.v ../ControlUnit/control_unit.v ../Register/register.v ../Accumulator/accumulator.v ../ALU/ALU.v ../DataMemory/DM.v ../SP/SP.v ../RegFile/reg_file.v ../Generals/generals.v processor.v} 
+set sourcefiles {../IM/IM.v ../PC/PC.v ../ControlUnit/control_unit.v ../Register/register.v ../Accumulator/accumulator.v ../ALU/ALU.v ../DataMemory/DM.v ../SP/SP.v ../RegFile/reg_file.v ../Generals/generals.v ../Register/tensor_register.v ../Counter/counter.v ../Accumulator/tensor_accumulator.v ../MXU/MXU.v processor.v} 
 
 # set name of the top module
 set topmodule processor

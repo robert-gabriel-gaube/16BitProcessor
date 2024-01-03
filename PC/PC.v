@@ -1,11 +1,3 @@
-module PC_adder(
-    input [9:0] in,
-    output [9:0] out
-);
-    assign out = in + 1;
-
-endmodule
-
 module PC(
     input [9:0] new_pc_val,
     input [9:0] branch_address,

@@ -1,7 +1,6 @@
 module accumulator(
     input [15:0] alu_out,
-    input reset, clk,
-    input str_rez,
+    input reset, clk, str_rez,
     output reg [15:0] out
 );
 
