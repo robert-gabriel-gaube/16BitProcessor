@@ -10,15 +10,14 @@ module processor;
     wire [15:0] sp_out, dm_out, alu_out;
     wire [3:0] alu_flags;
 
+    wire [143:0] a_out, b_out, t_acc_out, mxu_out;
+    wire [4:0] state;
+
     wire [15:0] alu_val_extend_out, alu_reg_mux_out, dm_val_extend_out;
     wire [15:0] dm_mux_out, dm_mux_mux_out, tensor_element_out;
     wire [9:0] pc_mux_out, new_pc_val;
     wire [8:0] dm_address;
-    wire [4:0] state;
     wire [3:0] counter_out;
-
-    wire [143:0] a_out, b_out, mxu_out, t_acc_out;
-    
 
     localparam MOVE = 0, STORE = 1, BRANCH = 2;
     localparam POP = 3, PUSH = 4, STALL = 5;
@@ -168,8 +167,8 @@ module processor;
         .mxu_out(mxu_out)
     );
 
-    localparam NUM_INSTRUCTIONS = 25;
-    localparam CLOCK_CYCLES = 100, CLOCK_PERIOD = 100;
+    localparam NUM_INSTRUCTIONS = 16;
+    localparam CLOCK_CYCLES = 43, CLOCK_PERIOD = 100;
 
     initial begin 
         clk = 0;
@@ -191,54 +190,55 @@ module processor;
         #(100 * NUM_INSTRUCTIONS) en_write = 1'b0;
     end
 
+    // MOV X, 10
+    // MUL X, 8
+    // MOV Y, A
+    // DIV Y, 7
+    // MOV X, A
+    // MOD Y, 7
+    // MOV X, A
+    // LSL X, 4
+    // MOV Y, A
+    // LSR X, 4
+    // MOV Y, A
+    // RSL X, 4
+    // MOV Y, A
+    // RSR X, 4
+    // MOV Y, A
+    // HLT
+
     initial begin 
-        data_in = 16'b0100000000000001;
+        data_in = 16'b0100000000001010;
         #100
-        data_in = 16'b0000100000000001;
+        data_in = 16'b0100010000001000;
         #100
-        data_in = 16'b0100000000000010;
+        data_in = 16'b0100001100000000;
         #100
-        data_in = 16'b0000100000000010;
+        data_in = 16'b0100100000000111;
         #100
-        data_in = 16'b0100000000000011;
+        data_in = 16'b0100001100000000;
         #100
-        data_in = 16'b0000100000000011;
+        data_in = 16'b0100110000000111;
         #100
-        data_in = 16'b0100000000000100;
+        data_in = 16'b0100001100000000;
         #100
-        data_in = 16'b0000100000000100;
+        data_in = 16'b0011010000000100;
         #100
-        data_in = 16'b0100000000000101;
+        data_in = 16'b0100001100000000;
         #100
-        data_in = 16'b0000100000000101;
+        data_in = 16'b0011000000000100;
         #100
-        data_in = 16'b0100000000000110;
+        data_in = 16'b0100001100000000;
         #100
-        data_in = 16'b0000100000000110;
+        data_in = 16'b0011110000000100;
         #100
-        data_in = 16'b0100000000000111;
+        data_in = 16'b0100001100000000;
         #100
-        data_in = 16'b0000100000000111;
+        data_in = 16'b0011100000000100;
         #100
-        data_in = 16'b0100000000001000;
+        data_in = 16'b0100001100000000;
         #100
-        data_in = 16'b0000100000001000;
-        #100
-        data_in = 16'b0100000000001001;
-        #100
-        data_in = 16'b0000100000001001;
-        #100
-        data_in = 16'h7C01;
-        #100
-        data_in = 16'h7E01;
-        #100
-        data_in = 16'h8000;
-        #100
-        data_in = 16'h7801;
-        #100
-        data_in = 16'h7C01;
-        #100
-        data_in = 16'h0000;
+        data_in = 16'b0000000000000000;
     end
 
 endmodule
