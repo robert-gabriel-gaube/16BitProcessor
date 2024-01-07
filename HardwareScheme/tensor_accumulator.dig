@@ -10,7 +10,7 @@
     </entry>
     <entry>
       <string>Width</string>
-      <int>7</int>
+      <int>5</int>
     </entry>
   </attributes>
   <visualElements>
@@ -19,14 +19,10 @@
       <elementAttributes>
         <entry>
           <string>Label</string>
-          <string>mxu_out</string>
-        </entry>
-        <entry>
-          <string>Bits</string>
-          <int>64</int>
+          <string>reset</string>
         </entry>
       </elementAttributes>
-      <pos x="360" y="180"/>
+      <pos x="360" y="300"/>
     </visualElement>
     <visualElement>
       <elementName>In</elementName>
@@ -43,10 +39,14 @@
       <elementAttributes>
         <entry>
           <string>Label</string>
-          <string>reset</string>
+          <string>mxu_out</string>
+        </entry>
+        <entry>
+          <string>Bits</string>
+          <int>64</int>
         </entry>
       </elementAttributes>
-      <pos x="360" y="300"/>
+      <pos x="360" y="180"/>
     </visualElement>
     <visualElement>
       <elementName>Clock</elementName>

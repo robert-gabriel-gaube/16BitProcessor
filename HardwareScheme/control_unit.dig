@@ -15,16 +15,6 @@
   </attributes>
   <visualElements>
     <visualElement>
-      <elementName>Clock</elementName>
-      <elementAttributes>
-        <entry>
-          <string>Label</string>
-          <string>clk</string>
-        </entry>
-      </elementAttributes>
-      <pos x="240" y="120"/>
-    </visualElement>
-    <visualElement>
       <elementName>In</elementName>
       <elementAttributes>
         <entry>
@@ -43,6 +33,16 @@
         </entry>
       </elementAttributes>
       <pos x="240" y="240"/>
+    </visualElement>
+    <visualElement>
+      <elementName>In</elementName>
+      <elementAttributes>
+        <entry>
+          <string>Label</string>
+          <string>tensor_op_done</string>
+        </entry>
+      </elementAttributes>
+      <pos x="240" y="420"/>
     </visualElement>
     <visualElement>
       <elementName>In</elementName>
@@ -69,16 +69,6 @@
       <elementAttributes>
         <entry>
           <string>Label</string>
-          <string>tensor_op_done</string>
-        </entry>
-      </elementAttributes>
-      <pos x="240" y="420"/>
-    </visualElement>
-    <visualElement>
-      <elementName>In</elementName>
-      <elementAttributes>
-        <entry>
-          <string>Label</string>
           <string>opcode</string>
         </entry>
       </elementAttributes>
@@ -95,14 +85,14 @@
       <pos x="240" y="540"/>
     </visualElement>
     <visualElement>
-      <elementName>Out</elementName>
+      <elementName>Clock</elementName>
       <elementAttributes>
         <entry>
           <string>Label</string>
-          <string>state</string>
+          <string>clk</string>
         </entry>
       </elementAttributes>
-      <pos x="480" y="420"/>
+      <pos x="240" y="120"/>
     </visualElement>
     <visualElement>
       <elementName>Out</elementName>
@@ -113,6 +103,16 @@
         </entry>
       </elementAttributes>
       <pos x="480" y="300"/>
+    </visualElement>
+    <visualElement>
+      <elementName>Out</elementName>
+      <elementAttributes>
+        <entry>
+          <string>Label</string>
+          <string>state</string>
+        </entry>
+      </elementAttributes>
+      <pos x="480" y="420"/>
     </visualElement>
   </visualElements>
   <wires/>
